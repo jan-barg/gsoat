@@ -3,7 +3,11 @@ import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 // Server-side client with service role (for admin operations)
-export const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+export const supabaseAdmin = createClient(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+	db: { schema: 'public' }
+});
 
 // Public client (respects RLS)
-export const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+export const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
+	db: { schema: 'public' }
+});

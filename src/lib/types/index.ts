@@ -3,10 +3,10 @@ import { z } from 'zod';
 // Track schema and type
 export const TrackSchema = z.object({
 	id: z.string().uuid(),
-	isrc: z.string().min(1),
-	title: z.string().min(1),
-	artist: z.string().min(1),
-	cover_image_url: z.string().url().nullable(),
+	isrc: z.string().min(12).max(15), // ISRC format: 12 chars without hyphens
+	title: z.string().min(1).max(500),
+	artist: z.string().min(1).max(500),
+	cover_image_url: z.string().url().max(2048).nullable(),
 	elo_rating: z.number().int().default(1200),
 	matchups_won: z.number().int().default(0),
 	created_at: z.string().datetime()
@@ -19,7 +19,7 @@ export const VoteSchema = z.object({
 	id: z.string().uuid(),
 	winner_id: z.string().uuid(),
 	loser_id: z.string().uuid(),
-	user_session: z.string().min(1),
+	user_session: z.string().min(1).max(128),
 	created_at: z.string().datetime()
 });
 
@@ -29,7 +29,7 @@ export type Vote = z.infer<typeof VoteSchema>;
 export const VotePayloadSchema = z.object({
 	winner_id: z.string().uuid(),
 	loser_id: z.string().uuid(),
-	matchup_token: z.string().min(1)
+	matchup_token: z.string().min(32).max(128)
 });
 
 export type VotePayload = z.infer<typeof VotePayloadSchema>;
@@ -37,10 +37,10 @@ export type VotePayload = z.infer<typeof VotePayloadSchema>;
 // Matchup session schema
 export const MatchupSessionSchema = z.object({
 	id: z.string().uuid(),
-	user_session: z.string().min(1),
+	user_session: z.string().min(1).max(128),
 	song_a_id: z.string().uuid(),
 	song_b_id: z.string().uuid(),
-	token: z.string().min(1),
+	token: z.string().min(32).max(128),
 	token_expires_at: z.string().datetime(),
 	created_at: z.string().datetime()
 });
@@ -55,19 +55,21 @@ export const SpotifyTrackSchema = z.object({
 	album: z.object({
 		images: z.array(z.object({ url: z.string() }))
 	}),
-	external_ids: z.object({
-		isrc: z.string().optional()
-	})
+	external_ids: z
+		.object({
+			isrc: z.string().optional()
+		})
+		.optional()
 });
 
 export type SpotifyTrack = z.infer<typeof SpotifyTrackSchema>;
 
 // Add song payload
 export const AddSongPayloadSchema = z.object({
-	isrc: z.string().min(1),
-	title: z.string().min(1),
-	artist: z.string().min(1),
-	cover_image_url: z.string().url().nullable()
+	isrc: z.string().min(12).max(15),
+	title: z.string().min(1).max(500),
+	artist: z.string().min(1).max(500),
+	cover_image_url: z.string().url().max(2048).nullable()
 });
 
 export type AddSongPayload = z.infer<typeof AddSongPayloadSchema>;

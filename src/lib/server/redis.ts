@@ -14,3 +14,11 @@ export const voteRateLimiter = new Ratelimit({
 	analytics: true,
 	prefix: 'gsoat:vote'
 });
+
+// Rate limiter: 5 song additions per minute per IP
+export const addSongRateLimiter = new Ratelimit({
+	redis,
+	limiter: Ratelimit.slidingWindow(5, '1 m'),
+	analytics: true,
+	prefix: 'gsoat:add'
+});
