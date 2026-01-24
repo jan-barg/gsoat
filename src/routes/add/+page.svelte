@@ -112,6 +112,7 @@
 								<input type="hidden" name="title" value={track.title} />
 								<input type="hidden" name="artist" value={track.artist} />
 								<input type="hidden" name="cover_url" value={track.coverUrl ?? ''} />
+								<input type="hidden" name="spotify_id" value={track.spotifyId ?? ''} />
 								<button
 									type="submit"
 									disabled={isAdding}

@@ -62,7 +62,8 @@ export const actions: Actions = {
 			isrc: formData.get('isrc'),
 			title: formData.get('title'),
 			artist: formData.get('artist'),
-			cover_image_url: formData.get('cover_url') || null
+			cover_image_url: formData.get('cover_url') || null,
+			spotify_id: formData.get('spotify_id') || null
 		};
 
 		// Validate with Zod
@@ -72,7 +73,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Invalid song data.' });
 		}
 
-		const { isrc, title, artist, cover_image_url } = result.data;
+		const { isrc, title, artist, cover_image_url, spotify_id } = result.data;
 
 		// Check for duplicate
 		const { data: existing } = await supabaseAdmin
@@ -93,6 +94,7 @@ export const actions: Actions = {
 				title,
 				artist,
 				cover_image_url,
+				spotify_id,
 				elo_rating: DEFAULT_ELO,
 				matchups_won: 0
 			})

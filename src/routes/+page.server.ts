@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		supabaseAdmin.from('votes').select('*', { count: 'exact', head: true })
 	]);
 
-	// Get next matchup
+	// Get next matchup (spotify_id is included from database)
 	const matchup = await getNextMatchup(sessionId);
 
 	return {

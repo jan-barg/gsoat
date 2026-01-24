@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import AudioPlayer from '$lib/components/AudioPlayer.svelte';
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -45,25 +46,7 @@
 
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<!-- Song A -->
-					<form
-						method="POST"
-						action="?/vote"
-						use:enhance={() => {
-							isSubmitting = true;
-							return async ({ update }) => {
-								await update();
-								isSubmitting = false;
-							};
-						}}
-					>
-						<input type="hidden" name="matchup_token" value={data.matchup.token} />
-						<input type="hidden" name="winner_id" value={data.matchup.songA.id} />
-						<input type="hidden" name="loser_id" value={data.matchup.songB.id} />
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							class="group relative bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent hover:border-green-500 focus:border-green-500 focus:outline-none w-full"
-						>
+					<div class="bg-gray-800 rounded-xl p-6">
 						{#if data.matchup.songA.cover_image_url}
 							<img
 								src={data.matchup.songA.cover_image_url}
@@ -77,32 +60,36 @@
 						{/if}
 						<h2 class="text-xl font-bold truncate">{data.matchup.songA.title}</h2>
 						<p class="text-gray-400 truncate">{data.matchup.songA.artist}</p>
-						<div class="absolute inset-0 flex items-center justify-center bg-green-600/90 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
-							<span class="text-2xl font-bold">Vote</span>
-						</div>
-					</button>
-					</form>
+
+						<AudioPlayer spotifyId={data.matchup.songA.spotify_id} />
+
+						<form
+							method="POST"
+							action="?/vote"
+							use:enhance={() => {
+								isSubmitting = true;
+								return async ({ update }) => {
+									await update();
+									isSubmitting = false;
+								};
+							}}
+							class="mt-4"
+						>
+							<input type="hidden" name="matchup_token" value={data.matchup.token} />
+							<input type="hidden" name="winner_id" value={data.matchup.songA.id} />
+							<input type="hidden" name="loser_id" value={data.matchup.songB.id} />
+							<button
+								type="submit"
+								disabled={isSubmitting}
+								class="w-full py-3 rounded-lg bg-green-600 hover:bg-green-500 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							>
+								{isSubmitting ? 'Voting...' : 'Vote for this song'}
+							</button>
+						</form>
+					</div>
 
 					<!-- Song B -->
-					<form
-						method="POST"
-						action="?/vote"
-						use:enhance={() => {
-							isSubmitting = true;
-							return async ({ update }) => {
-								await update();
-								isSubmitting = false;
-							};
-						}}
-					>
-						<input type="hidden" name="matchup_token" value={data.matchup.token} />
-						<input type="hidden" name="winner_id" value={data.matchup.songB.id} />
-						<input type="hidden" name="loser_id" value={data.matchup.songA.id} />
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							class="group relative bg-gray-800 rounded-xl p-6 hover:bg-gray-700 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent hover:border-green-500 focus:border-green-500 focus:outline-none w-full"
-						>
+					<div class="bg-gray-800 rounded-xl p-6">
 						{#if data.matchup.songB.cover_image_url}
 							<img
 								src={data.matchup.songB.cover_image_url}
@@ -116,11 +103,33 @@
 						{/if}
 						<h2 class="text-xl font-bold truncate">{data.matchup.songB.title}</h2>
 						<p class="text-gray-400 truncate">{data.matchup.songB.artist}</p>
-						<div class="absolute inset-0 flex items-center justify-center bg-green-600/90 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity">
-							<span class="text-2xl font-bold">Vote</span>
-						</div>
-					</button>
-					</form>
+
+						<AudioPlayer spotifyId={data.matchup.songB.spotify_id} />
+
+						<form
+							method="POST"
+							action="?/vote"
+							use:enhance={() => {
+								isSubmitting = true;
+								return async ({ update }) => {
+									await update();
+									isSubmitting = false;
+								};
+							}}
+							class="mt-4"
+						>
+							<input type="hidden" name="matchup_token" value={data.matchup.token} />
+							<input type="hidden" name="winner_id" value={data.matchup.songB.id} />
+							<input type="hidden" name="loser_id" value={data.matchup.songA.id} />
+							<button
+								type="submit"
+								disabled={isSubmitting}
+								class="w-full py-3 rounded-lg bg-green-600 hover:bg-green-500 font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+							>
+								{isSubmitting ? 'Voting...' : 'Vote for this song'}
+							</button>
+						</form>
+					</div>
 				</div>
 
 				<p class="text-center text-gray-500 text-sm mt-6">

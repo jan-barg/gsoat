@@ -7,6 +7,7 @@ export const TrackSchema = z.object({
 	title: z.string().min(1).max(500),
 	artist: z.string().min(1).max(500),
 	cover_image_url: z.string().url().max(2048).nullable(),
+	spotify_id: z.string().max(50).nullable().optional(), // For Spotify embed player
 	elo_rating: z.number().int().default(1200),
 	matchups_won: z.number().int().default(0),
 	created_at: z.string().datetime()
@@ -69,7 +70,8 @@ export const AddSongPayloadSchema = z.object({
 	isrc: z.string().min(12).max(15),
 	title: z.string().min(1).max(500),
 	artist: z.string().min(1).max(500),
-	cover_image_url: z.string().url().max(2048).nullable()
+	cover_image_url: z.string().url().max(2048).nullable(),
+	spotify_id: z.string().max(50).nullable().optional()
 });
 
 export type AddSongPayload = z.infer<typeof AddSongPayloadSchema>;

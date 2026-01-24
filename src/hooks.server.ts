@@ -17,8 +17,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 			"script-src 'self'",
 			"style-src 'self' 'unsafe-inline'",
 			"img-src 'self' https://i.scdn.co data:", // Spotify album art
-			"media-src 'self' https://*.mzstatic.com", // iTunes audio previews
+			"media-src 'self'",
 			"connect-src 'self' https://*.supabase.co https://*.upstash.io",
+			"frame-src https://open.spotify.com", // Spotify embed player
 			"frame-ancestors 'none'"
 		].join('; ')
 	);
