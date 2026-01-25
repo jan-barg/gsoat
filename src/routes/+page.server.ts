@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { supabaseAdmin } from '$lib/server/supabase';
 import { voteRateLimiter } from '$lib/server/redis';
@@ -138,6 +138,19 @@ export const actions: Actions = {
 			newRatings: { winner: newWinnerRating, loser: newLoserRating }
 		});
 
-		return { success: true };
+		// Redirect to prevent form resubmission on refresh (POST-Redirect-GET)
+		redirect(303, '/');
+	},
+
+	skip: async ({ cookies }) => {
+		const sessionId = getOrCreateSessionId(cookies);
+
+		// Delete current matchup session to get a new one on redirect
+		await supabaseAdmin
+			.from('matchup_sessions')
+			.delete()
+			.eq('user_session', sessionId);
+
+		redirect(303, '/');
 	}
 };

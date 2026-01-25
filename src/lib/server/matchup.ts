@@ -65,33 +65,40 @@ export async function getNextMatchup(
 		}
 	}
 
-	// Find a valid pair (similar ELO, not already voted on)
+	// Find a random valid pair using reservoir sampling (memory efficient)
 	let songA: Track | null = null;
 	let songB: Track | null = null;
+	let inRangeCount = 0;
+	let anyCount = 0;
 
-	// Try to find a pair within ELO range first
-	for (let i = 0; i < tracks.length && !songA; i++) {
+	// First pass: try to find a random pair within ELO range
+	for (let i = 0; i < tracks.length; i++) {
 		for (let j = i + 1; j < tracks.length; j++) {
 			const pairKey = `${tracks[i].id}-${tracks[j].id}`;
 
 			if (!votedPairs.has(pairKey) && isWithinMatchRange(tracks[i].elo_rating, tracks[j].elo_rating)) {
-				songA = tracks[i] as Track;
-				songB = tracks[j] as Track;
-				break;
+				inRangeCount++;
+				// Reservoir sampling: replace with probability 1/count
+				if (Math.random() < 1 / inRangeCount) {
+					songA = tracks[i] as Track;
+					songB = tracks[j] as Track;
+				}
 			}
 		}
 	}
 
-	// If no pair within range, try any unvoted pair
+	// Second pass: if no pair within range, pick any random unvoted pair
 	if (!songA) {
-		for (let i = 0; i < tracks.length && !songA; i++) {
+		for (let i = 0; i < tracks.length; i++) {
 			for (let j = i + 1; j < tracks.length; j++) {
 				const pairKey = `${tracks[i].id}-${tracks[j].id}`;
 
 				if (!votedPairs.has(pairKey)) {
-					songA = tracks[i] as Track;
-					songB = tracks[j] as Track;
-					break;
+					anyCount++;
+					if (Math.random() < 1 / anyCount) {
+						songA = tracks[i] as Track;
+						songB = tracks[j] as Track;
+					}
 				}
 			}
 		}
