@@ -25,7 +25,7 @@ Leaderboard allows you to sort the songs by ELO score (asc & desc) and matchups 
 
 ## Link
 
-https://gsoat.vercel.app
+Currently inactive
 
 ## Routes
 
